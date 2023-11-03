@@ -7,7 +7,7 @@ def create_app():
 
     app.config.from_mapping(
         FROM_EMAIL=os.environ.get('FROM_EMAIL'),
-        MAILCHIMP_KEY=os.environ.get('MAILCHIMP_API_KEY'),
+        GOOGLE_API_KEY=os.environ.get('GOOGLE_API_KEY'),
         SECRET_KEY=os.environ.get('SECRET_KEY'),
         DATABASE_HOST=os.environ.get('FLASK_DATABASE_HOST'),
         DATABASE_PASSWORD=os.environ.get('FLASK_DATABASE_PASSWORD'),

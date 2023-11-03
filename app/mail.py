@@ -1,6 +1,11 @@
 from flask import (
     Blueprint, render_template, request, flash, redirect, url_for, current_app
 )
+from email.message import EmailMessage
+import ssl
+import smtplib
+from email.mime.text import MIMEText
+
 import sendgrid
 from sendgrid.helpers.mail import *
 
@@ -45,10 +50,21 @@ def create():
 
     return render_template('mails/create.html')
 
+
 def send(to, subject, content):
-    sg = sendgrid.SendGridAPIClient(api_key=current_app.config['MAILCHIMP_API_KEY'])
-    from_email = Email(current_app.config['FROM_EMAIL'])
-    to_email = To(to)
-    content = Content('text/plain', content)
-    mail = Mail(from_email, to_email, subject, content)
-    response = sg.client.mail.send.past(request_body=mail.get())
+    email_from = current_app.config['FROM_EMAIL']
+    email_password = current_app.config['GOOGLE_API_KEY']
+    email_to = to
+    email_subject = subject
+    email_content = MIMEText(content)
+    email_sender = EmailMessage()
+    email_sender['From'] = email_from
+    email_sender['To'] = email_to
+    email_sender['subject'] = email_subject
+    email_sender.set_content= email_content
+
+    context = ssl.create_default_context()
+
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
+        smtp.login(email_from, email_password)
+        smtp.sendmail(email_from, email_to, email_sender.as_string())
