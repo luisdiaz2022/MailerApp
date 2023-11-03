@@ -12,9 +12,14 @@ bp = Blueprint('mail', __name__, url_prefix="/")
 
 @bp.route('/', methods=['GET'])
 def index():
+    search = request.args.get('search')
     db, cursor = get_db()
+    if search is None:
+        cursor.execute("SELECT * FROM email")
 
-    cursor.execute("SELECT * FROM email")
+    else:
+        cursor.execute("SELECT * from email WHERE content like %s", ('%' + search + '%',))
+    
     mails = cursor.fetchall()
 
     return render_template('mails/index.html', mails=mails)
@@ -54,6 +59,7 @@ def send(to, subject, content):
     email_to = to
     email_subject = subject
     email_content = MIMEText(content, 'plain')
+
     email_sender = EmailMessage()
     email_sender['From'] = email_from
     email_sender['To'] = email_to
