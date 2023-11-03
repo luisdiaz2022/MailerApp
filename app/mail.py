@@ -6,9 +6,6 @@ import ssl
 import smtplib
 from email.mime.text import MIMEText
 
-import sendgrid
-from sendgrid.helpers.mail import *
-
 from app.db import get_db
 
 bp = Blueprint('mail', __name__, url_prefix="/")
@@ -56,12 +53,12 @@ def send(to, subject, content):
     email_password = current_app.config['GOOGLE_API_KEY']
     email_to = to
     email_subject = subject
-    email_content = MIMEText(content)
+    email_content = MIMEText(content, 'plain')
     email_sender = EmailMessage()
     email_sender['From'] = email_from
     email_sender['To'] = email_to
     email_sender['subject'] = email_subject
-    email_sender.set_content= email_content
+    email_sender.set_content(email_content)
 
     context = ssl.create_default_context()
 
