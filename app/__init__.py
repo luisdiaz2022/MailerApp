@@ -3,9 +3,9 @@ import os
 from flask import Flask
 
 def create_app():
-    app = Flask(__name__)
+    mailer = Flask(__name__)
 
-    app.config.from_mapping(
+    mailer.config.from_mapping(
         FROM_EMAIL=os.environ.get('FROM_EMAIL'),
         GOOGLE_API_KEY=os.environ.get('GOOGLE_API_KEY'),
         SECRET_KEY=os.environ.get('SECRET_KEY'),
@@ -17,10 +17,10 @@ def create_app():
 
     from . import db
 
-    db.init_app(app)
+    db.init_app(mailer)
 
     from . import mail
 
-    app.register_blueprint(mail.bp)
+    mailer.register_blueprint(mail.bp)
 
-    return app
+    return mailer
